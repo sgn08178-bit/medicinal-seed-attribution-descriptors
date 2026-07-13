@@ -1,0 +1,29 @@
+seed: 42
+image_root: data/processed_images
+mask_root: data/foreground_masks
+img_size: 224
+num_classes: 5
+batch_size: 32
+epochs: 100
+patience: 15
+learning_rate: 0.0004
+min_learning_rate: 0.000001
+warmup_epochs: 5
+weight_decay: 0.01
+label_smoothing: 0.1
+final_val_size: 0.1
+n_folds: 5
+test_size: 0.2
+model_name: [convnext_small, resnet50, efficientnet_b0]
+pretrained: true
+num_workers: 4
+pin_memory: true
+imagenet_mean: [0.485, 0.456, 0.406]
+imagenet_std: [0.229, 0.224, 0.225]
+augmentation:
+  resize: {enabled: true}
+  random_horizontal_flip: {enabled: true, p: 0.5}
+  random_rotation: {enabled: true, degrees: 10}
+  color_jitter: {enabled: true, brightness: 0.15, contrast: 0.15, saturation: 0.10, hue: 0.02}
+  random_erasing: {enabled: false}
+  random_vertical_flip: {enabled: false}

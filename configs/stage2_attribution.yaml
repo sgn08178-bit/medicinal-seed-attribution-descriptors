@@ -1,0 +1,26 @@
+seed: 42
+img_size: 224
+num_classes: 5
+class_order: [ARSE, ARSS, PJNA, PRDA, PRPE]
+image_root: data/processed_images
+mask_root: data/foreground_masks
+test_csv: source_data/stage1/test_split.csv
+stage1_runs_root: results/stage1
+convnext_checkpoint: data/model_checkpoints/convnext_small_best_model.pth
+device: cuda
+batch_size: 8
+num_workers: 2
+pin_memory: true
+imagenet_mean: [0.485, 0.456, 0.406]
+imagenet_std: [0.229, 0.224, 0.225]
+integrated_gradients:
+  baseline: zero
+  n_steps: 100
+  internal_batch_size: 10
+  multiply_by_inputs: true
+  use_predicted_class: true
+  attribution_2d: abs_sum_channels
+gradcam:
+  use_predicted_class: true
+  relu: true
+  normalize_per_image: true

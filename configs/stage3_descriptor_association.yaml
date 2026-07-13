@@ -1,0 +1,30 @@
+seed: 42
+img_size: 224
+class_order: [ARSE, ARSS, PJNA, PRDA, PRPE]
+image_root: data/processed_images
+mask_root: data/foreground_masks
+test_csv: source_data/stage1/test_split.csv
+test_predictions_csv: source_data/stage1/convnext_small_test_predictions.csv
+canonical_ig_zero_absolute_dir: data/attribution_arrays/zero_baseline_absolute
+canonical_ig_zero_positive_dir: data/attribution_arrays/zero_baseline_positive
+convnext_gradcam_final_dir: data/attribution_arrays/gradcam_convnext_stages.2.blocks.26
+output_dir: results/stage3
+foreground_only: true
+descriptor_normalization: per_map_minmax
+correlation_method: spearman
+fdr_method: benjamini_hochberg
+alpha: 0.05
+save_raw_descriptor_maps: true
+save_visualization_maps: true
+run_positive_ig_supplementary: true
+run_gradcam_descriptor_association: true
+gabor_frequencies: [0.1, 0.2, 0.3]
+gabor_thetas: [0, 45, 90, 135]
+fft_low_pass_ratio: 0.25
+wavelet: db2
+wavelet_level: 2
+lbp_radius: 2
+lbp_n_points: 16
+lbp_method: uniform
+fd_n_components: 20
+representative_descriptors: [LAB_L, LAB_Chroma, FFT_LowPass, Wavelet_L1_V, Gabor_f0.3_t0°, Curvature_Laplacian, DistanceTransform]

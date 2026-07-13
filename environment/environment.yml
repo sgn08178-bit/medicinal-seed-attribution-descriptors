@@ -1,0 +1,26 @@
+name: medicinal-seed-attribution
+channels:
+  - pytorch-nightly
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11.15
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/nightly/cu128
+      - torch==2.12.0.dev20260316+cu128
+      - torchvision==0.26.0.dev20260316+cu128
+      - opencv-python-headless==4.10.0.84
+      - PyWavelets==1.8.0
+      - numpy==2.4.4
+      - pandas==2.3.3
+      - scipy==1.17.1
+      - scikit-learn==1.8.0
+      - scikit-image==0.26.0
+      - Pillow==12.2.0
+      - matplotlib==3.10.8
+      - seaborn==0.13.2
+      - statsmodels==0.14.6
+      - captum==0.8.0
+      - timm==0.6.7
+      - rembg==2.0.75

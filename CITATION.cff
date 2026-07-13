@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Please cite this software repository and the associated manuscript."
+title: "Medicinal seed attribution-descriptor analysis"
+type: software
+version: 0.1.0
+date-released: 2026-07-13
+repository-code: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
+url: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
+authors:
+  - family-names: Chin
+    given-names: Su-Min
+  - family-names: Kim
+    given-names: Min-Woo
+  - family-names: Jeon
+    given-names: Yu-Jin
+  - family-names: Park
+    given-names: Yea-Jin
+  - family-names: Choi
+    given-names: Chi-Won
+  - family-names: Jang
+    given-names: Min-Hyeok
+  - family-names: Jung
+    given-names: Dae-Hyun
