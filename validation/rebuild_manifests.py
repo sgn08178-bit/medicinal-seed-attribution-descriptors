@@ -9,13 +9,20 @@ from pathlib import Path
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+TEXT_SUFFIXES = {".cff", ".csv", ".md", ".py", ".txt", ".yaml", ".yml"}
+TEXT_FILENAMES = {".gitignore"}
 
 
-def sha256(path: Path) -> str:
+def canonical_bytes(path: Path) -> bytes:
+    data = path.read_bytes()
+    if path.suffix.lower() in TEXT_SUFFIXES or path.name in TEXT_FILENAMES:
+        return data.replace(b"\r\n", b"\n")
+    return data
+
+
+def sha256(data: bytes) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+    digest.update(data)
     return digest.hexdigest()
 
 
@@ -37,11 +44,12 @@ def repository_manifest() -> None:
             or "__pycache__" in path.parts
         ):
             continue
+        data = canonical_bytes(path)
         rows.append(
             {
                 "relative_path": path.relative_to(REPOSITORY_ROOT).as_posix(),
-                "size_bytes": path.stat().st_size,
-                "sha256": sha256(path),
+                "size_bytes": len(data),
+                "sha256": sha256(data),
             }
         )
     write_csv(output, ["relative_path", "size_bytes", "sha256"], rows)

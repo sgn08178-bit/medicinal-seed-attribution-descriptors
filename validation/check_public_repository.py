@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "MANIFEST.csv"
 TEXT_SUFFIXES = {".md", ".py", ".txt", ".yaml", ".yml"}
+CANONICAL_TEXT_SUFFIXES = TEXT_SUFFIXES | {".cff", ".csv"}
+CANONICAL_TEXT_FILENAMES = {".gitignore"}
 FORBIDDEN_FRAGMENTS = {
     "ScientificReports_submission",
     "manuscript_v3",
@@ -31,11 +33,19 @@ FORBIDDEN_FRAGMENTS = {
 }
 
 
-def sha256(path: Path) -> str:
+def canonical_bytes(path: Path) -> bytes:
+    data = path.read_bytes()
+    if (
+        path.suffix.lower() in CANONICAL_TEXT_SUFFIXES
+        or path.name in CANONICAL_TEXT_FILENAMES
+    ):
+        return data.replace(b"\r\n", b"\n")
+    return data
+
+
+def sha256(data: bytes) -> str:
     digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+    digest.update(data)
     return digest.hexdigest()
 
 
@@ -63,9 +73,10 @@ def validate_manifest(files: list[Path]) -> None:
 
     for relative_path, path in expected.items():
         row = recorded[relative_path]
-        if int(row["size_bytes"]) != path.stat().st_size:
+        data = canonical_bytes(path)
+        if int(row["size_bytes"]) != len(data):
             raise ValueError(f"Manifest size mismatch: {relative_path}")
-        if row["sha256"] != sha256(path):
+        if row["sha256"] != sha256(data):
             raise ValueError(f"Manifest SHA-256 mismatch: {relative_path}")
 
     print(f"Manifest: PASS ({len(rows)} files)")
