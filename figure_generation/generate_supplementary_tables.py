@@ -15,11 +15,30 @@ from typing import Iterable
 import pandas as pd
 
 
-ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
-OUT = ROOT / "ScientificReports_submission/04_Supplementary_Tables_and_Data"
-STAGE = ROOT / "manuscript_v3_supplement_code_submission"
-INV_SRC = ROOT / "stage7c_all_valid_descriptor_classifier/descriptor_map_inventory.csv"
-PDF_TEXT = ROOT / "pdf_v3_extracted_text_for_submission.txt"
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+SOURCE_DATA_ROOT = Path(
+    os.environ.get("MEDICINAL_SEED_SOURCE_DATA_ROOT", ROOT / "source_data")
+).resolve()
+RESULTS_ROOT = Path(os.environ.get("MEDICINAL_SEED_RESULTS_ROOT", ROOT / "results")).resolve()
+OUT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_SUPPLEMENTARY_TABLE_OUTPUT",
+        RESULTS_ROOT / "supplementary_tables",
+    )
+).resolve()
+STAGE = SOURCE_DATA_ROOT
+INV_SRC = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_INVENTORY_CSV",
+        SOURCE_DATA_ROOT / "descriptor_map_inventory.csv",
+    )
+).resolve()
+PDF_TEXT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_MANUSCRIPT_TEXT",
+        SOURCE_DATA_ROOT / "manuscript_text.txt",
+    )
+).resolve()
 
 
 DISPLAY_REPLACEMENTS = {

@@ -49,19 +49,66 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
-OUT = ROOT / "stage7c_all_valid_descriptor_classifier"
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+DATA_ROOT = Path(os.environ.get("MEDICINAL_SEED_DATA_ROOT", ROOT / "data")).resolve()
+RESULTS_ROOT = Path(os.environ.get("MEDICINAL_SEED_RESULTS_ROOT", ROOT / "results")).resolve()
+OUT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_CLASSIFIER_OUTPUT",
+        RESULTS_ROOT / "descriptor_classifier",
+    )
+).resolve()
 FIG = OUT / "figures"
 CM_DIR = OUT / "confusion_matrices"
 
-TRAIN_CSV = ROOT / "stage1_model_performance_comparison_runs/train.csv"
-TEST_CSV = ROOT / "stage1_model_performance_comparison_runs/test.csv"
-STAGE3_DESC_ROOT = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/descriptor_maps/raw_npy"
-STAGE5_DESC_ROOT = ROOT / "stage5_descriptor_context_validation/descriptor_maps_generated/raw_npy"
-STAGE3_META = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/descriptor_maps/descriptor_generation_metadata.csv"
-STAGE3_QC = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/descriptor_maps/descriptor_quality_check.csv"
-STAGE3_TOP = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/summaries/stage3_top_descriptors.csv"
-AUDIT_TABLE = ROOT / "stage7b_expanded_descriptor_subset_classifiers/descriptor_set_audit/descriptor_inclusion_table.csv"
+TRAIN_CSV = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TRAIN_CSV",
+        DATA_ROOT / "metadata" / "train_split.csv",
+    )
+).resolve()
+TEST_CSV = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TEST_CSV",
+        DATA_ROOT / "metadata" / "test_split.csv",
+    )
+).resolve()
+STAGE3_DESC_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TEST_DESCRIPTOR_ROOT",
+        DATA_ROOT / "descriptor_maps" / "test",
+    )
+).resolve()
+STAGE5_DESC_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TRAIN_DESCRIPTOR_ROOT",
+        DATA_ROOT / "descriptor_maps" / "train",
+    )
+).resolve()
+STAGE3_META = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_METADATA_CSV",
+        DATA_ROOT / "descriptor_generation_metadata.csv",
+    )
+).resolve()
+STAGE3_QC = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_QC_CSV",
+        DATA_ROOT / "descriptor_quality_check.csv",
+    )
+).resolve()
+STAGE3_TOP = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TOP_DESCRIPTORS_CSV",
+        DATA_ROOT / "stage3_top_descriptors.csv",
+    )
+).resolve()
+AUDIT_TABLE = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_AUDIT_CSV",
+        DATA_ROOT / "descriptor_inclusion_table.csv",
+    )
+).resolve()
 
 SEED = 42
 N_FOLDS = 5
@@ -738,14 +785,14 @@ def write_reports(
     def rel_value(sid: str, model: str, col: str) -> float:
         return float(rel_true[(rel_true["subset_id"] == sid) & (rel_true["model"] == model)][col].iloc[0])
 
-    gpt = [
-        "# Stage 7C results for GPT",
+    summary_lines = [
+        "# Descriptor classification results",
         "",
         "## Best model by subset",
         "",
         md_table(best, best_cols + ["included_descriptor_names"]),
         "",
-        "## GPT-ready summary",
+        "## Results summary",
         "",
         f"Descriptor map inventory: {n_found} individual descriptor maps were found; {n_valid} valid descriptor maps were included in the true all valid descriptor map set; invalid/dropped maps: {'none' if not invalid_desc else '; '.join(invalid_desc)}.",
         "",
@@ -765,7 +812,9 @@ def write_reports(
         "",
         "Recommended manuscript action: use this as a supplementary or auxiliary descriptor-subset classification table. Mention briefly in Results only if the manuscript needs support that descriptor summary features contain class-discriminative visual information. Use the true all valid descriptor set, not the selected 10-map set, as the all-descriptor baseline. Safe Results sentence: Descriptor summary features computed within the seed foreground retained class-discriminative visual information across standard classifiers, with compact IG-associated subsets preserving part of the full descriptor-set performance. Safe Discussion sentence: These descriptor-subset results provide auxiliary foreground-restricted visual context and should not be interpreted as evidence that the CNN directly relies on predefined descriptors.",
     ]
-    (OUT / "STAGE7C_RESULTS_FOR_GPT.md").write_text("\n".join(gpt) + "\n", encoding="utf-8")
+    (OUT / "descriptor_classification_summary.md").write_text(
+        "\n".join(summary_lines) + "\n", encoding="utf-8"
+    )
 
 
 def main() -> None:
@@ -821,10 +870,12 @@ def main() -> None:
             "performance": str(OUT / "descriptor_subset_model_performance.csv"),
             "best_model_by_subset": str(OUT / "best_model_by_subset.csv"),
             "report": str(OUT / "STAGE7C_INTEGRATED_REPORT.md"),
-            "gpt_report": str(OUT / "STAGE7C_RESULTS_FOR_GPT.md"),
+            "summary_report": str(OUT / "descriptor_classification_summary.md"),
         },
     }
-    (OUT / "stage7c_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    (OUT / "descriptor_classification_manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8"
+    )
     print(f"Stage 7C complete: {OUT}")
 
 

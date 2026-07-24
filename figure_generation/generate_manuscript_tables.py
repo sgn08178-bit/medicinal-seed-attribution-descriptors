@@ -11,36 +11,50 @@ import numpy as np
 import pandas as pd
 
 
-ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
-OUT = ROOT / "manuscript_tables"
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+SOURCE_DATA_ROOT = Path(
+    os.environ.get("MEDICINAL_SEED_SOURCE_DATA_ROOT", ROOT / "source_data")
+).resolve()
+RESULTS_ROOT = Path(os.environ.get("MEDICINAL_SEED_RESULTS_ROOT", ROOT / "results")).resolve()
+OUT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_MANUSCRIPT_TABLE_OUTPUT",
+        RESULTS_ROOT / "manuscript_tables",
+    )
+).resolve()
 MAIN = OUT / "main_tables"
 SUPP = OUT / "supplementary_tables"
 MAIN_MD = OUT / "main_tables_markdown"
 SUPP_MD = OUT / "supplementary_tables_markdown"
 
 REQUIRED_DOCS = [
-    ROOT / "FINAL_ANALYSIS_MANIFEST.md",
-    ROOT / "FINAL_ANALYSIS_MANIFEST.json",
-    ROOT / "FINAL_RESULTS_FOR_MANUSCRIPT.md",
-    ROOT / "FINAL_FIGURE_SOURCE_MAP.md",
-    ROOT / "MANUSCRIPT_RESULTS_OUTLINE.md",
-    ROOT / "MANUSCRIPT_CLAIM_BOUNDARY_NOTES.md",
+    SOURCE_DATA_ROOT / "FINAL_ANALYSIS_MANIFEST.md",
+    SOURCE_DATA_ROOT / "FINAL_ANALYSIS_MANIFEST.json",
+    SOURCE_DATA_ROOT / "FINAL_RESULTS_FOR_MANUSCRIPT.md",
+    SOURCE_DATA_ROOT / "FINAL_FIGURE_SOURCE_MAP.md",
+    SOURCE_DATA_ROOT / "MANUSCRIPT_RESULTS_OUTLINE.md",
+    SOURCE_DATA_ROOT / "MANUSCRIPT_CLAIM_BOUNDARY_NOTES.md",
 ]
 
+
+def source_path(env_name: str, relative_path: str) -> Path:
+    return Path(os.environ.get(env_name, SOURCE_DATA_ROOT / relative_path)).resolve()
+
+
 SRC = {
-    "model_comparison": ROOT / "stage1_model_performance_comparison_runs/model_comparison_summary.csv",
-    "test_csv": ROOT / "stage1_model_performance_comparison_runs/test.csv",
-    "gradcam_final": ROOT / "stage2_attribution_maps/runs/stage2_attribution_20260605/03_gradcam_final_selected_layers/gradcam_final_generation_summary.csv",
-    "gradcam_candidate": ROOT / "stage2_attribution_maps/runs/stage2_attribution_20260605/02_gradcam_candidate_layers/all_models/summary/all_model_layer_selection_summary.csv",
-    "ig_abs_assoc": ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/association_ig_zero_absolute/descriptor_summary.csv",
-    "ig_abs_fdr": ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/association_ig_zero_absolute/fdr_corrected_results.csv",
-    "ig_pos_assoc": ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/association_ig_zero_positive/descriptor_summary.csv",
-    "gradcam_assoc": ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/association_gradcam_convnext/descriptor_summary.csv",
-    "occlusion_metrics": ROOT / "stage4_occlusion_overlap/runs/stage4_occlusion_20260606_065203/occlusion_results/condition_level_metrics.csv",
-    "accuracy_drop": ROOT / "stage4_occlusion_overlap/runs/stage4_occlusion_20260606_065203/occlusion_results/accuracy_drop_summary.csv",
-    "confidence_drop": ROOT / "stage4_occlusion_overlap/runs/stage4_occlusion_20260606_065203/occlusion_results/confidence_drop_summary.csv",
-    "mask_overlap": ROOT / "stage4_occlusion_overlap/runs/stage4_occlusion_20260606_065203/mask_overlap/condition_level_pairwise_iou_summary.csv",
-    "ig_baseline": ROOT / "stage2_attribution_maps/runs/stage2_attribution_20260605/01_ig_convnext_canonical_rawrgb_baseline/visualization_check/zero_vs_blur_correlation_summary.csv",
+    "model_comparison": source_path("MEDICINAL_SEED_MODEL_COMPARISON_CSV", "stage1/model_comparison_summary.csv"),
+    "test_csv": source_path("MEDICINAL_SEED_TEST_CSV", "stage1/test_split.csv"),
+    "gradcam_final": source_path("MEDICINAL_SEED_GRADCAM_FINAL_SUMMARY_CSV", "stage2/gradcam_final_generation_summary.csv"),
+    "gradcam_candidate": source_path("MEDICINAL_SEED_GRADCAM_CANDIDATE_SUMMARY_CSV", "stage2/all_model_layer_selection_summary.csv"),
+    "ig_abs_assoc": source_path("MEDICINAL_SEED_IG_ABSOLUTE_ASSOCIATION_CSV", "stage3/ig_zero_absolute_descriptor_summary.csv"),
+    "ig_abs_fdr": source_path("MEDICINAL_SEED_IG_ABSOLUTE_FDR_CSV", "stage3/ig_zero_absolute_fdr_corrected_results.csv"),
+    "ig_pos_assoc": source_path("MEDICINAL_SEED_IG_POSITIVE_ASSOCIATION_CSV", "stage3/ig_zero_positive_descriptor_summary.csv"),
+    "gradcam_assoc": source_path("MEDICINAL_SEED_GRADCAM_ASSOCIATION_CSV", "stage3/gradcam_descriptor_summary.csv"),
+    "occlusion_metrics": source_path("MEDICINAL_SEED_OCCLUSION_METRICS_CSV", "stage4/condition_level_metrics.csv"),
+    "accuracy_drop": source_path("MEDICINAL_SEED_ACCURACY_DROP_CSV", "stage4/accuracy_drop_summary.csv"),
+    "confidence_drop": source_path("MEDICINAL_SEED_CONFIDENCE_DROP_CSV", "stage4/confidence_drop_summary.csv"),
+    "mask_overlap": source_path("MEDICINAL_SEED_MASK_OVERLAP_CSV", "stage4/condition_level_pairwise_iou_summary.csv"),
+    "ig_baseline": source_path("MEDICINAL_SEED_IG_BASELINE_SUMMARY_CSV", "stage2/zero_vs_blur_correlation_summary.csv"),
 }
 
 DESCRIPTOR_LABELS = {

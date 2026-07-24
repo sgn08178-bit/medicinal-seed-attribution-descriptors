@@ -14,6 +14,7 @@ data/model_checkpoints/
 data/attribution_arrays/
 data/descriptor_maps/
 data/manual_orientation_corrections.csv
+data/metadata/
 
 source_data/
 validation/validation_results.csv

@@ -27,13 +27,48 @@ plt.rcParams.update(
 )
 
 
-ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
-STAGE_PACKAGE = ROOT / "manuscript_v3_supplement_code_submission"
-STAGE1_CONVNEXT = ROOT / "stage1_model_performance_comparison_runs/convnext_small"
-IG_BASE = ROOT / "stage2_attribution_maps/runs/stage2_attribution_20260605/01_ig_convnext_canonical_rawrgb_baseline"
-GRADCAM_SELECTED = ROOT / "stage2_attribution_maps/runs/stage2_attribution_20260605/03_gradcam_final_selected_layers/convnext_small/selected_layer_stages.2.blocks.26"
-DESCRIPTOR_RUN = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/descriptor_maps"
-SOURCE_DIR = ROOT / "supplementary_figure_source_data"
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+SOURCE_DATA_ROOT = Path(
+    os.environ.get("MEDICINAL_SEED_SOURCE_DATA_ROOT", ROOT / "source_data")
+).resolve()
+RESULTS_ROOT = Path(os.environ.get("MEDICINAL_SEED_RESULTS_ROOT", ROOT / "results")).resolve()
+OUTPUT_DIR = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_SUPPLEMENTARY_FIGURE_OUTPUT",
+        RESULTS_ROOT / "supplementary_figures",
+    )
+).resolve()
+STAGE_PACKAGE = SOURCE_DATA_ROOT
+STAGE1_CONVNEXT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_CONVNEXT_RESULTS_ROOT",
+        SOURCE_DATA_ROOT / "model_results" / "convnext_small",
+    )
+).resolve()
+IG_BASE = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_IG_RESULTS_ROOT",
+        SOURCE_DATA_ROOT / "attribution" / "integrated_gradients",
+    )
+).resolve()
+GRADCAM_SELECTED = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_GRADCAM_RESULTS_ROOT",
+        SOURCE_DATA_ROOT / "attribution" / "gradcam" / "convnext_small",
+    )
+).resolve()
+DESCRIPTOR_RUN = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_MAP_ROOT",
+        SOURCE_DATA_ROOT / "descriptor_maps",
+    )
+).resolve()
+SOURCE_DIR = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_SUPPLEMENTARY_FIGURE_SOURCE_ROOT",
+        SOURCE_DATA_ROOT / "supplementary_figure_source_data",
+    )
+).resolve()
 
 
 CLASS_ORDER = ["ARSE", "ARSS", "PJNA", "PRDA", "PRPE"]
@@ -155,7 +190,8 @@ def make_s1() -> None:
 
     fig.text(0.013, 0.982, "a", fontsize=12, fontweight="bold", va="top")
     fig.tight_layout(rect=(0.04, 0.0, 1, 0.98), w_pad=0.8, h_pad=0.7)
-    fig.savefig(ROOT / "Supplementary_Fig_S1.png", bbox_inches="tight")
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    fig.savefig(OUTPUT_DIR / "Supplementary_Fig_S1.png", bbox_inches="tight")
     plt.close(fig)
     pd.DataFrame(rows).to_csv(SOURCE_DIR / "Supplementary_Fig_S1_source_data.csv", index=False)
 
@@ -223,7 +259,7 @@ def make_s2() -> None:
     fig.text(0.018, 0.982, "a", fontsize=12, fontweight="bold", va="top")
     fig.text(0.018, 0.165, "b", fontsize=12, fontweight="bold", va="top")
     fig.subplots_adjust(left=0.12, right=0.94, top=0.94, bottom=0.08)
-    fig.savefig(ROOT / "Supplementary_Fig_S2.png", bbox_inches="tight")
+    fig.savefig(OUTPUT_DIR / "Supplementary_Fig_S2.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -267,7 +303,7 @@ def make_s3() -> None:
         )
     fig.text(0.014, 0.98, "a", fontsize=12, fontweight="bold", va="top")
     fig.text(0.58, 0.98, "b", fontsize=12, fontweight="bold", va="top")
-    fig.savefig(ROOT / "Supplementary_Fig_S3.png", bbox_inches="tight")
+    fig.savefig(OUTPUT_DIR / "Supplementary_Fig_S3.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -293,7 +329,7 @@ def make_s4() -> None:
     for spine in ax.spines.values():
         spine.set_visible(False)
     fig.tight_layout()
-    fig.savefig(ROOT / "Supplementary_Fig_S4.png", bbox_inches="tight")
+    fig.savefig(OUTPUT_DIR / "Supplementary_Fig_S4.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -307,7 +343,7 @@ def main() -> None:
         writer = csv.writer(fh)
         writer.writerow(["file", "description"])
         for name in ["Supplementary_Fig_S1.png", "Supplementary_Fig_S2.png", "Supplementary_Fig_S3.png", "Supplementary_Fig_S4.png"]:
-            writer.writerow([str(ROOT / name), "Generated supplementary figure draft"])
+            writer.writerow([str(OUTPUT_DIR / name), "Generated supplementary figure draft"])
         for path in sorted(SOURCE_DIR.iterdir()):
             writer.writerow([str(path), "Supplementary figure source data or generated descriptor map array"])
 

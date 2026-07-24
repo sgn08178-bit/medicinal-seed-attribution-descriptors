@@ -16,8 +16,16 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(
     os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])
-)
-DEFAULT_CORRECTION_CSV = REPOSITORY_ROOT / "data" / "manual_orientation_corrections.csv"
+).resolve()
+DATA_ROOT = Path(
+    os.environ.get("MEDICINAL_SEED_DATA_ROOT", REPOSITORY_ROOT / "data")
+).resolve()
+DEFAULT_CORRECTION_CSV = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_CORRECTION_CSV",
+        DATA_ROOT / "metadata" / "manual_orientation_corrections.csv",
+    )
+).resolve()
 
 VALID_INITIAL_OPERATIONS = {
     "none", "hflip", "vflip", "rot90cw", "rot90ccw", "rot135cw", "rot225cw"

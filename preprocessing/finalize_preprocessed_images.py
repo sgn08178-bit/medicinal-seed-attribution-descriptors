@@ -1,4 +1,5 @@
 import csv
+import os
 from pathlib import Path
 
 import matplotlib
@@ -10,9 +11,23 @@ from PIL import Image
 from correction_manifest import DEFAULT_CORRECTION_CSV, load_operations
 
 
-INPUT_IMAGE_ROOT = Path("data/processed_images_v2")
-INPUT_MASK_ROOT = Path("data/foreground_masks_v2")
-OUTPUT_ROOT = Path("data")
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+DATA_ROOT = Path(os.environ.get("MEDICINAL_SEED_DATA_ROOT", ROOT / "data")).resolve()
+INPUT_IMAGE_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_PREPROCESSED_INPUT_ROOT",
+        DATA_ROOT / "processed_images_intermediate",
+    )
+).resolve()
+INPUT_MASK_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_MASK_INPUT_ROOT",
+        DATA_ROOT / "foreground_masks_intermediate",
+    )
+).resolve()
+OUTPUT_ROOT = Path(
+    os.environ.get("MEDICINAL_SEED_PREPROCESSING_OUTPUT_ROOT", DATA_ROOT)
+).resolve()
 OUTPUT_IMAGE_ROOT = OUTPUT_ROOT / "images"
 OUTPUT_MASK_ROOT = OUTPUT_ROOT / "masks"
 LOG_PATH = OUTPUT_ROOT / "postprocess_log.csv"

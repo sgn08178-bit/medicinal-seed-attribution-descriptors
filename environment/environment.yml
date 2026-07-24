@@ -24,3 +24,8 @@ dependencies:
       - captum==0.8.0
       - timm==0.6.7
       - rembg==2.0.75
+      - PyYAML==6.0.3
+      - tqdm==4.67.3
+      - xgboost==3.2.0
+      - lightgbm==4.6.0
+      - catboost==1.2.10

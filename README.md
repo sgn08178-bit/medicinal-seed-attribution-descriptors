@@ -1,6 +1,6 @@
 # Medicinal seed attribution-descriptor analysis
 
-This repository supports the analyses reported in **Contextualizing CNN attribution maps using predefined image-derived descriptors in medicinal plant seed classification**. It contains analysis code, reproducibility specifications, environment files, and validation scripts. Research data, derived result tables, the manuscript, and publication figures are maintained separately.
+This repository supports the analyses reported in **Contextualizing CNN attribution maps using predefined image-derived descriptors in medicinal plant seed classification**. It contains analysis code, reproducibility specifications, environment files, and validation scripts. The image dataset and its metadata are maintained as a separate citable data release.
 
 ## Workflow
 
@@ -12,11 +12,11 @@ This repository supports the analyses reported in **Contextualizing CNN attribut
 6. `descriptor_classifier/`: classification from foreground descriptor summary features.
 7. `figure_generation/`: supplementary figure and table generation scripts.
 
-Each stage reads the preceding stage and writes to a new `results/` subdirectory. No research data are bundled. Obtain the controlled input and derived-data package separately and place it under the relative paths documented in `data/README.md` and `configs/`. See `DATA_ACCESS.md` for the access scope.
+Each stage reads the preceding stage and writes to a new `results/` subdirectory. Research data are not duplicated in Git. Download the companion data release when its DOI is added to `DATA_ACCESS.md`, then place or link the extracted dataset at `data/`, as documented in `data/README.md`.
 
 ## Manual orientation corrections
 
-The preprocessing code expects the canonical machine-readable correction record at `data/manual_orientation_corrections.csv`. This controlled data file is not included in the public code-only repository. It records 24 unique images: 15 initial horizontal flips, 4 initial vertical flips, and 5 initial rotation corrections, matching the Methods. Four of the same 24 images also have a recorded final-stage postprocessing adjustment. Preprocessing stops with an error if the separately supplied manifest is missing or does not pass its count and operation checks.
+The preprocessing code expects the canonical machine-readable correction record at `data/metadata/manual_orientation_corrections.csv`. It records 24 unique images: 15 initial horizontal flips, 4 initial vertical flips, and 5 initial rotation corrections, matching the Methods. Four of the same 24 images also have a recorded final-stage postprocessing adjustment. Preprocessing stops with an error if the manifest is missing or does not pass its count and operation checks.
 
 ## Execution order
 
@@ -40,21 +40,32 @@ python statistics/scripts/02_compute_ig_descriptor_association.py --config confi
 python statistics/scripts/03_compute_gradcam_descriptor_association.py --config configs/stage3_descriptor_association.yaml --run-dir results/stage3/final
 python statistics/scripts/04_make_stage3_figures.py --config configs/stage3_descriptor_association.yaml --run-dir results/stage3/final
 python statistics/scripts/05_write_stage3_summary.py --config configs/stage3_descriptor_association.yaml --run-dir results/stage3/final
+
+python descriptor_classifier/01_run_descriptor_classification.py
+python descriptor_classifier/02_validate_and_export_descriptor_results.py
 ```
 
-The descriptor classifier scripts require the train/test descriptor-map roots listed at the top of each script. Set `MEDICINAL_SEED_PROJECT_ROOT` to the repository root after placing the separately supplied data package.
+The scripts use repository-relative defaults. To keep large data or results elsewhere, set the following environment variables without editing source code:
+
+- `MEDICINAL_SEED_PROJECT_ROOT`: repository root;
+- `MEDICINAL_SEED_DATA_ROOT`: extracted companion dataset root;
+- `MEDICINAL_SEED_RESULTS_ROOT`: result-output root;
+- `MEDICINAL_SEED_SOURCE_DATA_ROOT`: figure/table source-data root;
+- `MEDICINAL_SEED_TRAIN_DESCRIPTOR_ROOT` and `MEDICINAL_SEED_TEST_DESCRIPTOR_ROOT`: train/test descriptor-map roots.
+
+The descriptor-classification and figure-generation scripts also expose more specific optional path variables in their path-configuration blocks.
 
 ## Tables, figures, and validation
 
 ```bash
-python figure_generation/create_submission_ready_supplementary_tables.py
+python figure_generation/generate_supplementary_tables.py
 python figure_generation/generate_supplementary_figures.py
 python validation/validate_key_results.py
 ```
 
-The figure scripts preserve the exact final source mapping but require a local working copy of the separately supplied source tables and arrays under `source_data/`. After that controlled package is placed locally, `validation/validate_key_results.py` reproduces the split counts, descriptor count, ConvNeXt accuracy, manual-correction counts, and three principal IG association values.
+The figure scripts preserve the exact final source mapping but require a local working copy of the corresponding source tables and arrays under `source_data/`. After those files are placed locally, `validation/validate_key_results.py` reproduces the split counts, descriptor count, ConvNeXt accuracy, manual-correction counts, and three principal IG association values.
 
-Figures 1 and 2 are author-designed final composite figures and are not generated automatically by the analysis scripts. Generation code for analytical panels is included where applicable, while quantitative source data are available through the controlled-access process. Legacy figure-development helpers are excluded from this public release.
+Figures 1 and 2 are author-designed final composite figures and are not generated automatically by the analysis scripts. Generation code for analytical panels is included where applicable, while released quantitative source data are documented in the companion dataset. Legacy figure-development helpers are excluded from this public release.
 
 ## Compute environment
 
@@ -75,9 +86,9 @@ After changing any public file, rebuild the repository manifest from the reposit
 python validation/rebuild_manifests.py
 ```
 
-## Data and release limitations
+## Data release
 
-No research data are included. This covers raw and processed images, masks, checkpoints, attribution arrays, descriptor maps, result tables, figure source data, and the manual-correction manifest. Access is subject to source-provider and institutional permissions; see `DATA_ACCESS.md`.
+The companion dataset release contains the 1,124 study images in raw and processed form, foreground masks, sample metadata, the fixed 899/225 train/test split, the 24-image correction manifest, preprocessing logs, predictions, and principal result tables. The non-study source file `PJNA_0229.jpg` is excluded. Model checkpoints, per-image attribution arrays, and per-image descriptor-map intermediates are not stored in Git; see `DATA_ACCESS.md`.
 
 ## License
 

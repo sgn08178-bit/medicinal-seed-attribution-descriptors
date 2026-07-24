@@ -30,7 +30,12 @@ def repository_manifest() -> None:
     output = REPOSITORY_ROOT / "MANIFEST.csv"
     rows = []
     for path in sorted(REPOSITORY_ROOT.rglob("*")):
-        if not path.is_file() or path == output or "__pycache__" in path.parts:
+        if (
+            not path.is_file()
+            or path == output
+            or ".git" in path.parts
+            or "__pycache__" in path.parts
+        ):
             continue
         rows.append(
             {

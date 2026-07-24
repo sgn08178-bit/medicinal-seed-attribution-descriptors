@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Create manuscript-safe revised Stage 7C outputs.
-
-This keeps the original Stage 7C outputs intact and writes all revised outputs
-under stage7c_all_valid_descriptor_classifier/revised_for_manuscript/.
-"""
+"""Validate descriptor-classification outputs and export manuscript-ready files."""
 
 from __future__ import annotations
 
@@ -30,15 +26,47 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
-STAGE7C = ROOT / "stage7c_all_valid_descriptor_classifier"
-OUT = STAGE7C / "revised_for_manuscript"
+ROOT = Path(os.environ.get("MEDICINAL_SEED_PROJECT_ROOT", Path(__file__).resolve().parents[1])).resolve()
+DATA_ROOT = Path(os.environ.get("MEDICINAL_SEED_DATA_ROOT", ROOT / "data")).resolve()
+RESULTS_ROOT = Path(os.environ.get("MEDICINAL_SEED_RESULTS_ROOT", ROOT / "results")).resolve()
+STAGE7C = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_CLASSIFIER_OUTPUT",
+        RESULTS_ROOT / "descriptor_classifier",
+    )
+).resolve()
+OUT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_DESCRIPTOR_VALIDATION_OUTPUT",
+        STAGE7C / "validated",
+    )
+).resolve()
 FIG = OUT / "figures"
 
-TRAIN_CSV = ROOT / "stage1_model_performance_comparison_runs/train.csv"
-TEST_CSV = ROOT / "stage1_model_performance_comparison_runs/test.csv"
-STAGE3_DESC_ROOT = ROOT / "stage3_descriptor_association/runs/stage3_descriptor_association_20260606_020607/descriptor_maps/raw_npy"
-STAGE5_DESC_ROOT = ROOT / "stage5_descriptor_context_validation/descriptor_maps_generated/raw_npy"
+TRAIN_CSV = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TRAIN_CSV",
+        DATA_ROOT / "metadata" / "train_split.csv",
+    )
+).resolve()
+TEST_CSV = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TEST_CSV",
+        DATA_ROOT / "metadata" / "test_split.csv",
+    )
+).resolve()
+STAGE3_DESC_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TEST_DESCRIPTOR_ROOT",
+        DATA_ROOT / "descriptor_maps" / "test",
+    )
+).resolve()
+STAGE5_DESC_ROOT = Path(
+    os.environ.get(
+        "MEDICINAL_SEED_TRAIN_DESCRIPTOR_ROOT",
+        DATA_ROOT / "descriptor_maps" / "train",
+    )
+).resolve()
 FEATURES_CSV = STAGE7C / "all_valid_descriptor_summary_features.csv"
 INVENTORY_CSV = STAGE7C / "descriptor_map_inventory.csv"
 ORIGINAL_PERF_CSV = STAGE7C / "descriptor_subset_model_performance.csv"
@@ -504,10 +532,10 @@ def write_reports(audit_ok: bool, perf: pd.DataFrame, original_perf: pd.DataFram
     ]
     (OUT / "STAGE7C_REVISED_FOR_MANUSCRIPT_REPORT.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    gpt = [
-        "# Stage 7C revised results for GPT",
+    summary_lines = [
+        "# Validated descriptor classification results",
         "",
-        "## GPT-ready summary",
+        "## Results summary",
         "",
         f"Normalization audit conclusion: sampled `raw_npy` descriptor maps were already within [0, 1]: {'yes' if audit_ok else 'no or uncertain'}. Revised feature extraction was unchanged because the Stage 7C summary features were computed from already-normalized NPY maps. No mismatch with the manuscript Methods statement was detected in the sampled maps.",
         "",
@@ -531,7 +559,9 @@ def write_reports(audit_ok: bool, perf: pd.DataFrame, original_perf: pd.DataFram
         "",
         "Recommended manuscript action: put the fixed-model descriptor-subset classifier table in Supplementary material, and mention it briefly in Results or Discussion only as auxiliary support. Use true all valid descriptor maps as the baseline. Safe Results sentence: Foreground-restricted descriptor summary features retained class-discriminative visual information, and compact IG-associated subsets preserved a substantial fraction of the true all-descriptor baseline under fixed classifiers. Safe Discussion sentence: These auxiliary descriptor-subset results contextualize the descriptor maps as class-discriminative foreground summaries, without implying a direct CNN mechanism.",
     ]
-    (OUT / "STAGE7C_REVISED_FOR_GPT.md").write_text("\n".join(gpt) + "\n", encoding="utf-8")
+    (OUT / "descriptor_classification_validation_summary.md").write_text(
+        "\n".join(summary_lines) + "\n", encoding="utf-8"
+    )
 
 
 def main() -> None:
@@ -564,11 +594,13 @@ def main() -> None:
         "rbf_svm_table": str(OUT / "rbf_svm_descriptor_subset_performance.csv"),
         "subset_manifest": str(OUT / "revised_descriptor_subset_feature_manifest.csv"),
         "report": str(OUT / "STAGE7C_REVISED_FOR_MANUSCRIPT_REPORT.md"),
-        "gpt_report": str(OUT / "STAGE7C_REVISED_FOR_GPT.md"),
+        "summary_report": str(OUT / "descriptor_classification_validation_summary.md"),
         "normalization_needed": False,
         "normalization_action": "unchanged; audited raw_npy maps appeared already normalized to [0, 1]",
     }
-    (OUT / "stage7c_revised_manifest.json").write_text(json.dumps(manifest_json, indent=2), encoding="utf-8")
+    (OUT / "descriptor_validation_manifest.json").write_text(
+        json.dumps(manifest_json, indent=2), encoding="utf-8"
+    )
     print(f"Stage 7C revised manuscript outputs complete: {OUT}")
 
 
