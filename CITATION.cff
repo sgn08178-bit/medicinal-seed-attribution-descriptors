@@ -2,8 +2,9 @@ cff-version: 1.2.0
 message: "Please cite this software repository and the associated manuscript."
 title: "Medicinal seed attribution-descriptor analysis"
 type: software
-version: 0.1.0
-date-released: 2026-07-13
+version: 1.0.0
+date-released: 2026-07-25
+license: MIT
 repository-code: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
 url: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
 authors:

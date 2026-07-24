@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "MANIFEST.csv"
 TEXT_SUFFIXES = {".md", ".py", ".txt", ".yaml", ".yml"}
 CANONICAL_TEXT_SUFFIXES = TEXT_SUFFIXES | {".cff", ".csv"}
-CANONICAL_TEXT_FILENAMES = {".gitignore"}
+CANONICAL_TEXT_FILENAMES = {".gitignore", "LICENSE"}
 FORBIDDEN_FRAGMENTS = {
     "ScientificReports_submission",
     "manuscript_v3",
