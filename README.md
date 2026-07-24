@@ -2,6 +2,14 @@
 
 This repository supports the analyses reported in **Contextualizing CNN attribution maps using predefined image-derived descriptors in medicinal plant seed classification**. It contains analysis code, reproducibility specifications, environment files, and validation scripts. The image dataset and its metadata are maintained as a separate citable data release.
 
+## Citation and archived release
+
+- GitHub release: [v1.0.0](https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors/releases/tag/v1.0.0)
+- Archived software DOI: [10.5281/zenodo.21537321](https://doi.org/10.5281/zenodo.21537321)
+
+Use the version-specific DOI above when citing the code used for this study.
+The companion image dataset will receive a separate dataset DOI.
+
 ## Workflow
 
 1. `preprocessing/`: background removal, orientation normalization, foreground centering, manual-QC correction, and mask generation.

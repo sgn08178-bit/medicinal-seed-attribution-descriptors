@@ -5,7 +5,9 @@ type: software
 version: 1.0.0
 date-released: 2026-07-25
 license: MIT
+doi: 10.5281/zenodo.21537321
 repository-code: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
+repository-artifact: "https://doi.org/10.5281/zenodo.21537321"
 url: "https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors"
 authors:
   - family-names: Chin
