@@ -92,4 +92,6 @@ The companion dataset release contains the 1,124 study images in raw and process
 
 ## License
 
-No open-source license has been granted yet. The repository is publicly visible for scientific review and transparency, but reuse requires prior permission until the corresponding author and institution select a license. See `LICENSE_STATUS.md`.
+The analysis code in this repository is released under the [MIT License](LICENSE).
+The companion image dataset is a separate research output and will use the
+data license specified in its Zenodo record.

@@ -10,7 +10,7 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".cff", ".csv", ".md", ".py", ".txt", ".yaml", ".yml"}
-TEXT_FILENAMES = {".gitignore"}
+TEXT_FILENAMES = {".gitignore", "LICENSE"}
 
 
 def canonical_bytes(path: Path) -> bytes:
