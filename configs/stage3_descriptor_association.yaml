@@ -3,8 +3,8 @@ img_size: 224
 class_order: [ARSE, ARSS, PJNA, PRDA, PRPE]
 image_root: data/processed_images
 mask_root: data/foreground_masks
-test_csv: source_data/stage1/test_split.csv
-test_predictions_csv: source_data/stage1/convnext_small_test_predictions.csv
+test_csv: data/metadata/test_split.csv
+test_predictions_csv: data/metadata/convnext_small_test_predictions.csv
 canonical_ig_zero_absolute_dir: data/attribution_arrays/zero_baseline_absolute
 canonical_ig_zero_positive_dir: data/attribution_arrays/zero_baseline_positive
 convnext_gradcam_final_dir: data/attribution_arrays/gradcam_convnext_stages.2.blocks.26

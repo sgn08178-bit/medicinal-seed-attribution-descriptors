@@ -13,3 +13,7 @@ The values above were queried from the same preserved environment referenced by 
 A legacy `pip freeze` record contained conflicting distribution metadata (`opencv-python` 4.11.0.86 alongside `opencv-python-headless` 4.10.0.84, and PyWavelets 1.9.0). That record is retained in the private submission audit and is not included here because it must not be used to recreate the environment.
 
 The exact nightly PyTorch and torchvision builds require the PyTorch nightly CUDA 12.8 package index. A fresh environment was not built because the preserved analysis environment already contains these exact builds and a clean reinstall could fail if that dated nightly wheel is no longer retained upstream. Import and CLI smoke tests were run in the preserved final environment instead.
+
+Auxiliary dependencies required by the released scripts (`PyYAML`, `tqdm`,
+`xgboost`, `lightgbm`, and `catboost`) were recovered from the preserved package
+inventory and are also pinned in both environment files.

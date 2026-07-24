@@ -4,7 +4,7 @@ num_classes: 5
 class_order: [ARSE, ARSS, PJNA, PRDA, PRPE]
 image_root: data/processed_images
 mask_root: data/foreground_masks
-test_csv: source_data/stage1/test_split.csv
+test_csv: data/metadata/test_split.csv
 stage1_runs_root: results/stage1
 convnext_checkpoint: data/model_checkpoints/convnext_small_best_model.pth
 device: cuda
