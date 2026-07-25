@@ -1,7 +1,11 @@
 # Local data layout
 
-No research data are tracked in Git. Extract the companion dataset here, or set
-`MEDICINAL_SEED_DATA_ROOT` to the extracted dataset root:
+No research data are tracked in Git. Download the companion dataset from
+[Zenodo](https://doi.org/10.5281/zenodo.21537568). The dataset is released
+under CC BY 4.0.
+
+Extract all companion archives into a common dataset root. Place or link that
+root here, or set `MEDICINAL_SEED_DATA_ROOT` to the extracted dataset root:
 
 ```text
 data/
