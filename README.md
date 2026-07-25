@@ -6,9 +6,9 @@ This repository supports the analyses reported in **Contextualizing CNN attribut
 
 - GitHub release: [v1.0.0](https://github.com/sgn08178-bit/medicinal-seed-attribution-descriptors/releases/tag/v1.0.0)
 - Archived software DOI: [10.5281/zenodo.21537321](https://doi.org/10.5281/zenodo.21537321)
+- Companion dataset DOI: [10.5281/zenodo.21537568](https://doi.org/10.5281/zenodo.21537568)
 
-Use the version-specific DOI above when citing the code used for this study.
-The companion image dataset will receive a separate dataset DOI.
+Use the version-specific software DOI above when citing the code used for this study. Cite the companion dataset separately using its dataset DOI.
 
 ## Workflow
 
@@ -20,7 +20,7 @@ The companion image dataset will receive a separate dataset DOI.
 6. `descriptor_classifier/`: classification from foreground descriptor summary features.
 7. `figure_generation/`: supplementary figure and table generation scripts.
 
-Each stage reads the preceding stage and writes to a new `results/` subdirectory. Research data are not duplicated in Git. Download the companion data release when its DOI is added to `DATA_ACCESS.md`, then place or link the extracted dataset at `data/`, as documented in `data/README.md`.
+Each stage reads the preceding stage and writes to a new `results/` subdirectory. Research data are not duplicated in Git. Download the companion data release from [Zenodo](https://doi.org/10.5281/zenodo.21537568), then place or link the extracted dataset at `data/`, as documented in `data/README.md`.
 
 ## Manual orientation corrections
 
@@ -96,10 +96,10 @@ python validation/rebuild_manifests.py
 
 ## Data release
 
-The companion dataset release contains the 1,124 study images in raw and processed form, foreground masks, sample metadata, the fixed 899/225 train/test split, the 24-image correction manifest, preprocessing logs, predictions, and principal result tables. The non-study source file `PJNA_0229.jpg` is excluded. Model checkpoints, per-image attribution arrays, and per-image descriptor-map intermediates are not stored in Git; see `DATA_ACCESS.md`.
+The companion dataset release contains the 1,124 study images in raw and processed form, foreground masks, sample metadata, the fixed 899/225 train/test split, the 24-image correction manifest, preprocessing logs, predictions, and principal result tables. The non-study source file `PJNA_0229.jpg` is excluded. Model checkpoints, per-image attribution arrays, and per-image descriptor-map intermediates are not stored in Git; see `DATA_ACCESS.md`. The public dataset is archived at [10.5281/zenodo.21537568](https://doi.org/10.5281/zenodo.21537568).
 
 ## License
 
 The analysis code in this repository is released under the [MIT License](LICENSE).
-The companion image dataset is a separate research output and will use the
-data license specified in its Zenodo record.
+The companion image dataset is a separate research output released under the
+[Creative Commons Attribution 4.0 International license](https://creativecommons.org/licenses/by/4.0/).
