@@ -8,14 +8,12 @@ not include research data or derived numerical results.
 
 ## Companion public dataset
 
-A separate data release has been prepared for the 1,124 study samples. It
-contains original images, processed images, foreground masks, sample metadata,
-the fixed train/test split, the 24-image correction manifest, preprocessing
-logs, predictions, and principal result tables. The DOI will be inserted here
-after the corresponding author confirms the data license and the repository is
-published:
+The public data release for the 1,124 study samples contains original images,
+processed images, foreground masks, sample metadata, the fixed train/test
+split, the 24-image correction manifest, preprocessing logs, predictions, and
+principal result tables. It is archived in Zenodo under CC BY 4.0:
 
-> Dataset DOI: pending
+> Dataset DOI: https://doi.org/10.5281/zenodo.21537568
 
 The extra source-folder image `PJNA_0229.jpg` was not used in the study and is
 not included in the release.
